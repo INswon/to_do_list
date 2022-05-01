@@ -31,3 +31,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
     login(request, user)
     return todo_list(request=request)
+
+
+def register_view(request: HttpRequest) -> HttpResponse:
+    return HttpResponse('Unimplemented page')
