@@ -1,0 +1,9 @@
+{% if tasks %}
+    <ul>
+    {% for task in tasks %}
+        <li>{{ task.name }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No task is registered.</p>
+{% endif %}
