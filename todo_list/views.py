@@ -63,3 +63,50 @@ def register_view(request: HttpRequest) -> HttpResponse:
 
     login(request, user)
     return HttpResponseRedirect('../')
+
+
+def check_task_request(request: HttpRequest) -> None:
+    if request.method != 'POST':
+        raise Http404('Request method is not POST.')
+
+    user=request.user
+    if not user.is_authenticated:
+        raise Http404('User is not authenticated.')
+
+
+def create_task(request: HttpRequest) -> HttpResponse:
+    check_task_request(request=request)
+
+    name = request.POST.get('name')
+    if name is None:
+        Http404('Task name is not set.')
+
+    task = Task(user=request.user, name=name)
+    task.save()
+    return HttpResponseRedirect('../../')
+
+
+def update_task(request: HttpRequest) -> HttpResponse:
+    check_task_request(request=request)
+
+    id_ = request.POST.get('id')
+    name = request.POST.get('name')
+    if id is None or name is None:
+        Http404('Task id or name is not set.')
+
+    task = Task.objects.get(pk=id_)
+    task.name = name
+    task.save()
+    return HttpResponseRedirect('../../')
+
+
+def delete_task(request: HttpRequest) -> HttpResponse:
+    check_task_request(request=request)
+
+    id_ = request.POST.get('id')
+    if id is None:
+        Http404('Task id is not set.')
+
+    task = Task.objects.get(pk=id_)
+    task.delete()
+    return HttpResponseRedirect('../../')
