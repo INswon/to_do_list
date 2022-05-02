@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, models, login, logout
+from django.db import IntegrityError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -39,4 +40,21 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 
 def register_view(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('Unimplemented page')
+    if request.method == 'GET':
+        return render(request, 'todo_list/register.html')
+    elif request.method != 'POST':
+        raise Http404('Request method is not GET or POST.')
+
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+    except KeyError as e:
+        raise Http404(e)
+
+    try:
+        user = models.User.objects.create_user(username=username, password=password)
+    except IntegrityError as e:
+        raise Http404(f'Username {username} is already registered. Please register another username.')
+
+    login(request, user)
+    return HttpResponseRedirect('../')
