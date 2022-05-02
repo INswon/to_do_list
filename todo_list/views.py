@@ -24,8 +24,12 @@ def login_view(request: HttpRequest) -> HttpResponse:
     elif request.method != 'POST':
         raise Http404('Request method is not GET or POST.')
 
-    username = request.POST['username']
-    password = request.POST['password']
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+    except KeyError:
+        raise Http404('Username or password is not set.')
+
     user = authenticate(request, username=username, password=password)
 
     if user is None:
