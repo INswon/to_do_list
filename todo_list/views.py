@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -7,6 +7,10 @@ from .models import Task
 
 def index(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
+        return HttpResponseRedirect('login/')
+
+    if request.method == 'POST':
+        logout(request)
         return HttpResponseRedirect('login/')
 
     tasks = Task.objects.filter(user=request.user)
