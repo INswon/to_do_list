@@ -1,17 +1,13 @@
 from django.contrib.auth import authenticate, login
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from .models import Task
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    return HttpResponse('register and login form')
-
-
-def todo_list(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
-        raise Http404('Please login.')
+        return HttpResponseRedirect('login/')
 
     tasks = Task.objects.filter(user=request.user)
     return render(request, 'todo_list/todo_list.html', {'tasks': tasks})
@@ -31,7 +27,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
         return render(request, 'todo_list/login.html', {'error_message': 'Incorrect username or password.'})
 
     login(request, user)
-    return todo_list(request=request)
+    return index(request=request)
 
 
 def register_view(request: HttpRequest) -> HttpResponse:
