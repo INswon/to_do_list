@@ -35,7 +35,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
         return render(request, 'todo_list/login.html', {'error_message': 'Incorrect username or password.'})
 
     login(request, user)
-    return index(request=request)
+    return HttpResponseRedirect('../')
 
 
 def register_view(request: HttpRequest) -> HttpResponse:
