@@ -10,10 +10,6 @@ def index(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         return HttpResponseRedirect('login/')
 
-    if request.method == 'POST':
-        logout(request)
-        return HttpResponseRedirect('login/')
-
     tasks = Task.objects.filter(user=request.user)
     return render(
         request,
@@ -37,6 +33,11 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
     login(request, user)
     return HttpResponseRedirect('../')
+
+
+def logout_view(request: HttpRequest) -> HttpResponse:
+    logout(request)
+    return HttpResponseRedirect('../login/')
 
 
 def register_view(request: HttpRequest) -> HttpResponse:

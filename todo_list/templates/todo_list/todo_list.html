@@ -10,7 +10,7 @@
     <p>No task is registered.</p>
 {% endif %}
 
-<form method="post">
+<form action="/logout/" method="post">
     {% csrf_token %}
     <input type="submit" value="logout">
 </form>
