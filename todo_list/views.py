@@ -10,7 +10,11 @@ def index(request: HttpRequest) -> HttpResponse:
         return HttpResponseRedirect('login/')
 
     tasks = Task.objects.filter(user=request.user)
-    return render(request, 'todo_list/todo_list.html', {'tasks': tasks})
+    return render(
+        request,
+        'todo_list/todo_list.html',
+        {'username': request.user.username, 'tasks': tasks}
+    )
 
 
 def login_view(request: HttpRequest) -> HttpResponse:
