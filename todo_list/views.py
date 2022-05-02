@@ -1,8 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 
-from .models import User, Task
+from .models import Task
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -10,9 +10,10 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 def todo_list(request: HttpRequest) -> HttpResponse:
-    user_id = 1
-    user = get_object_or_404(User, pk=user_id)
-    tasks = Task.objects.filter(user=user)
+    if not request.user.is_authenticated:
+        raise Http404('Please login.')
+
+    tasks = Task.objects.filter(user=request.user)
     return render(request, 'todo_list/todo_list.html', {'tasks': tasks})
 
 
