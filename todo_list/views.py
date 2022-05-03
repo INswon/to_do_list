@@ -95,6 +95,9 @@ def update_task(request: HttpRequest) -> HttpResponse:
         Http404('Task id or name is not set.')
 
     task = Task.objects.get(pk=id_)
+    if task.user != request.user:
+        raise Http404("Another user's task can't be edited.")
+
     task.name = name
     task.save()
     return HttpResponseRedirect('../../')
@@ -108,5 +111,8 @@ def delete_task(request: HttpRequest) -> HttpResponse:
         Http404('Task id is not set.')
 
     task = Task.objects.get(pk=id_)
+    if task.user != request.user:
+        raise Http404("Another user's task can't be edited.")
+
     task.delete()
     return HttpResponseRedirect('../../')
